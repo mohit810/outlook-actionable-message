@@ -1,0 +1,51 @@
+<!-- template.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script type="application/adaptivecard+json">
+    {
+  "type": "AdaptiveCard",
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "version": "1.0",
+  "hideOriginalBody": true,
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "{{.CardMessage}}",
+      "wrap": true,
+      "id": "id"
+    },
+    {
+      "type": "Input.Text",
+      "placeholder": "Placeholder text",
+      "isMultiline": true,
+      "id": "answer"
+    }
+  ],
+  "actions": [
+    {
+      "type": "Action.Http",
+      "title": "Submit Response",
+      "url": "custom-url",
+      "method": "POST",
+      "body": "{\n\"choice\":\"approved\",\n\"comment\":\"{{.Value}}\"\n}",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": ""
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "id": "responsebtn"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+</body>
+</html>
