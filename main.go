@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"crypto/tls"
 	"fmt"
+	auth2 "github.com/mohit810/outlook-actionable-message/auth"
 	"net"
 	"net/smtp"
-	auth2 "outlook-smtp/auth"
 	"text/template"
 )
 
