@@ -5,12 +5,13 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
-	"github.com/julienschmidt/httprouter"
-	auth2 "github.com/mohit810/outlook-actionable-message/auth"
 	"net"
 	"net/http"
 	"net/smtp"
 	"text/template"
+
+	"github.com/julienschmidt/httprouter"
+	auth2 "github.com/mohit810/outlook-actionable-message/auth"
 )
 
 type UserController struct{}
@@ -78,24 +79,40 @@ func (uc UserController) SendingNormalActionableMessage(w http.ResponseWriter, r
 	if err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest) // 400
-		err = json.NewEncoder(w).Encode(struct {
+		errr := json.NewEncoder(w).Encode(struct {
 			Status string `json:"status"`
 		}{
 			Status: err.Error(),
 		})
-		if err != nil {
-			fmt.Println(err)
+		if errr != nil {
+			fmt.Println(errr)
 		}
 	} else {
 		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK) // 201
-		err = json.NewEncoder(w).Encode(struct {
+		w.WriteHeader(http.StatusOK) // 200
+		errr := json.NewEncoder(w).Encode(struct {
 			Status string `json:"status"`
 		}{
 			Status: "Success",
 		})
-		if err != nil {
-			fmt.Println(err)
+		if errr != nil {
+			fmt.Println(errr)
 		}
+	}
+}
+
+func (uc UserController) MailResponse(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	status := r.FormValue("choice")
+	comment := r.FormValue("comment")
+	fmt.Printf("the choice is " + status + " and the comment is " + comment)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK) // 200
+	err := json.NewEncoder(w).Encode(struct {
+		Status string `json:"status"`
+	}{
+		Status: "Success",
+	})
+	if err != nil {
+		fmt.Println(err)
 	}
 }
