@@ -5,6 +5,7 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
+	"github.com/mohit810/outlook-actionable-message/structs"
 	"net"
 	"net/http"
 	"net/smtp"
@@ -102,12 +103,19 @@ func (uc UserController) SendingNormalActionableMessage(w http.ResponseWriter, r
 }
 
 func (uc UserController) MailResponse(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-	status := r.FormValue("choice")
-	comment := r.FormValue("comment")
-	fmt.Printf("the choice is " + status + " and the comment is " + comment)
+
+	decoder := json.NewDecoder(r.Body)
+
+	var response structs.Response
+
+	err := decoder.Decode(&response)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("the choice is " + response.Choice + " and the comment is " + response.Comment)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK) // 200
-	err := json.NewEncoder(w).Encode(struct {
+	err = json.NewEncoder(w).Encode(struct {
 		Status string `json:"status"`
 	}{
 		Status: "Success",
